@@ -22,15 +22,7 @@ Route::get('/test', function (){
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
-
-Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');
-
-Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/root', 'PageController@root')->name('home.root');
 Route::get('/paypal', 'PaypalController@index')->name('paypal.index');
 Route::post('paypal', 'PaypalController@payment')->name('paypal.payment');
 
-Route::get('/home', 'HomeController@index')->name('home');
