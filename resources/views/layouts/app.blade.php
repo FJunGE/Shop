@@ -7,7 +7,7 @@
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'junge') {{ config('app.name', 'Laravel') }} 杂货铺</title>
+    <title>@yield('title', 'junge') - {{ config('app.name', 'Laravel') }} 杂货铺</title>
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
