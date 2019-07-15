@@ -15,14 +15,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/test', function (){
-    return "Hello Docker";	
-});
-
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
-Route::get('/root', 'PageController@root')->name('home.root');
-Route::get('/paypal', 'PaypalController@index')->name('paypal.index');
-Route::post('paypal', 'PaypalController@payment')->name('paypal.payment');
+Route::get('/', 'PageController@root')->name('home');
 
