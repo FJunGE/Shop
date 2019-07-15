@@ -15,7 +15,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Auth::routes();
+Auth::routes(['verify'=>true]);
 
-Route::get('/', 'PageController@root')->name('home');
+Route::get('/', 'PageController@root')->name('home')->middleware('verified');
 
