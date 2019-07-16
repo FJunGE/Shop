@@ -28,6 +28,7 @@
                             {{ Auth::user()->name }}
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a href="{{ route('user_addresses.index') }}" class="dropdown-item">收货地址</a>
                             <a onclick="event.preventDefault();document.getElementById('logout-form').submit();" href="#" class="dropdown-item">退出</a>
                             <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none">
                                 {{ csrf_field() }}
