@@ -12,12 +12,12 @@
                 </div>
                 <div class="card-body">
                     {{-- 后端处理异常显示开始 --}}
-                    @if(count($errors) > 0)
+                    @if (count($errors) > 0)
                         <div class="alert alert-danger">
-                            <h4>有错误发生</h4>
+                            <h5>有错误发生：</h5>
                             <ul>
-                                @foreach($errors->all() as $error)
-                                    <li><i class="glyphicon glyphicon-remove"></i> {{ error }}</li>
+                                @foreach ($errors->all() as $error)
+                                    <li><i class="glyphicon glyphicon-remove"></i> {{ $error }}</li>
                                 @endforeach
                             </ul>
                         </div>
@@ -25,7 +25,7 @@
                     {{-- 后端异常显示结束 --}}
 
                     <user-addresses-create-and-edit inline-template>
-                    <form class="form-horizontal" role="form">
+                    <form class="form-horizontal" role="form" action="{{ route('user_addresses.store') }}" method="post">
                         {{-- csrf token --}}
                         {{ csrf_field() }}
                         <select-district @change="onDistrictChanged" inline-template>
@@ -56,27 +56,27 @@
                         <input type="hidden" name="province" v-model="province">
                         <input type="hidden" name="city" v-model="city">
                         <input type="hidden" name="district" v-model="district">
-                        
+
                         <div class="form-group row">
-                            <label for="col-form-label text-md-right col-md-2">详细地址</label>
+                            <label class="col-form-label text-md-right col-sm-2">详细地址</label>
                             <div class="col-sm-9">
                                 <input type="text" class="form-control" name="address" value="{{ old('address', $address->address) }}">
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="col-form-label text-md-right col-md-2">邮编</label>
+                            <label class="col-form-label text-md-right col-md-2">邮编</label>
                             <div class="col-sm-9">
                                 <input type="text" class="form-control" name="zip" value="{{ old('address', $address->zip) }}">
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="col-form-label text-md-right col-md-2">姓名</label>
+                            <label class="col-form-label text-md-right col-md-2">姓名</label>
                             <div class="col-sm-9">
                                 <input type="text" class="form-control" name="contact_name" value="{{ old('address', $address->contact_name) }}">
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="col-form-label text-md-right col-md-2">电话</label>
+                            <label class="col-form-label text-md-right col-md-2">电话</label>
                             <div class="col-sm-9">
                                 <input type="text" class="form-control" name="contact_phone" value="{{ old('address', $address->contact_phone) }}">
                             </div>
