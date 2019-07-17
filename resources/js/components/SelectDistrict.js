@@ -65,15 +65,15 @@ Vue.component('select-district', {
     },
 
     methods: {
-        setFormValue(value) {
-            // 过滤空值
+        //
+            setFormValue(value) {
+            // 过滤掉空值
             value = _.filter(value);
-            // 如果数组的长度为0，则将省值清空（由于我们定义了观察器，会联动触发将城市和地区清空）
-            if (value.length === 0){
+            // 如果数组长度为0，则将省清空（由于我们定义了观察器，会联动触发将城市和地区清空）
+            if (value.length === 0) {
                 this.provinceId = '';
                 return;
             }
-
             // 从当前省列表中找到与数组第一个元素同名的项的索引
             const provinceId = _.findKey(this.provinces, o => o === value[0]);
             // 没找到，清空省的值
@@ -81,12 +81,11 @@ Vue.component('select-district', {
                 this.provinceId = '';
                 return;
             }
-            // 找到了 将当前省设置对应的ID
+            // 找到了，将当前省设置成对应的ID
             this.provinceId = provinceId;
-
             // 由于观察器的作用，这个时候城市列表已经变成了对应省的城市列表
             // 从当前城市列表找到与数组第二个元素同名的项的索引
-            const cityId = _.findKey(addressData['provinceId'], o => o === value[2]);
+            const cityId = _.findKey(addressData[provinceId], o => o === value[1]);
             // 没找到，清空城市的值
             if (!cityId) {
                 this.cityId = '';
@@ -94,7 +93,6 @@ Vue.component('select-district', {
             }
             // 找到了，将当前城市设置成对应的ID
             this.cityId = cityId;
-
             // 由于观察器的作用，这个时候地区列表已经变成了对应城市的地区列表
             // 从当前地区列表找到与数组第三个元素同名的项的索引
             const districtId = _.findKey(addressData[cityId], o => o === value[2]);
