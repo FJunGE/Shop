@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\UserAddress;
 use App\Http\Requests\UserAddressRequest;
+use Auth;
 
 class UserAddressesController extends Controller
 {
@@ -38,11 +39,13 @@ class UserAddressesController extends Controller
     
     public function edit(UserAddress $userAddress)
     {
+        $this->authorize('own', $userAddress);
         return view('user_addresses.create_and_edit', ['address'=> $userAddress]);
     }
 
     public function update(UserAddress $userAddress, UserAddressRequest $request)
     {
+        $this->authorize('own', $userAddress);
         $userAddress->update($request->only([
             'province',
             'city',
@@ -56,7 +59,9 @@ class UserAddressesController extends Controller
         return redirect()->route('user_addresses.index');
     }
 
-    public function destroy(UserAddress $userAddress){
+    public function destroy(UserAddress $userAddress)
+    {
+        $this->authorize('own', $userAddress);
         $userAddress->delete();
         return [];
     }
