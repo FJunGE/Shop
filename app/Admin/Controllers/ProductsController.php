@@ -67,9 +67,34 @@ class ProductsController extends Controller
     public function create(Content $content)
     {
         return $content
-            ->header('Create')
-            ->description('description')
+            ->header('创建商品')
             ->body($this->form());
+    }
+
+
+    /**
+     * Make a form builder.
+     *
+     * @return Form
+     */
+    protected function form()
+    {
+        $form = new Form(new Product);
+
+        // 创建一个输入框 第一个参数title是模型的字段名称，第二个是字段的描述
+        $form->text('title', '产品名称')->rules('required');
+        // 创建一个富文本编辑器
+        $form->editor('description', '产品描述')->rules('required');
+        // 创建一个选择图片框
+        $form->image('image', '产品图片')->rules('required|image');
+        $form->radio('on_sale', '上架')->options(['1'=>'是','0'=>'否'])->default(0);
+        $form->hasMany('skus', 'SKU 列表', function (Form\NestedForm $form){
+            $form->text('product_code','sku')->rules('required');
+            $form->text('description','描述')->rules('required');
+            $form->text('price', '单价')->rules('required');
+            $form->text('stock','库存')->rules('required|integer|min:0')
+        });
+        return $form;
     }
 
     /**
@@ -91,9 +116,6 @@ class ProductsController extends Controller
         $grid->sold_count('销量');
         $grid->review_count('评论数');
         $grid->price('价格')->display(function ($value){
-            return '￥'. $value;
-        });
-        $grid->cost('成本价格')->dispaly(function ($value){
             return '￥'. $value;
         });
 
@@ -138,27 +160,5 @@ class ProductsController extends Controller
         $show->updated_at('Updated at');
 
         return $show;
-    }
-
-    /**
-     * Make a form builder.
-     *
-     * @return Form
-     */
-    protected function form()
-    {
-        $form = new Form(new Product);
-
-        $form->text('title', 'Title');
-        $form->textarea('description', 'Description');
-        $form->image('image', 'Image');
-        $form->switch('on_sale', 'On sale')->default(1);
-        $form->decimal('rating', 'Rating')->default(5.00);
-        $form->number('sold_count', 'Sold count');
-        $form->number('review_count', 'Review count');
-        $form->decimal('price', 'Price');
-        $form->decimal('cost', 'Cost');
-
-        return $form;
     }
 }

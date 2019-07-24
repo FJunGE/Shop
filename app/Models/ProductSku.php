@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class ProductSku extends Model
 {
     protected $fillable = [
-        'product_code', 'description', 'price', 'stock'
+        'product_code', 'description', 'price', 'stock', 'cost'
     ];
 
     public function product()

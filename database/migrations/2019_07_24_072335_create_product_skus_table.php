@@ -18,6 +18,7 @@ class CreateProductSkusTable extends Migration
             $table->string('product_code');
             $table->text('description');
             $table->decimal('price',10,2);
+            $table->decimal('cost',10,2)->comment('商品的成本价');
             $table->unsignedInteger('stock');
             $table->unsignedBigInteger('product_id');
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
