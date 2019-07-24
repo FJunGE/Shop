@@ -33,7 +33,7 @@ class AuthServiceProvider extends ServiceProvider
         // 使用Gate::guessPolicyNameUsing 方法来自定义策略文件的寻找逻辑
         Gate::guessPolicyNamesUsing(function ($class){
             // class_basename 辅助函数，获取类的简短名称 如： App\Models\User 则获取 User
-            return '\\App\\Policies\\'.class_basename($class).'Policy';
+            return '\\App\\Policies\\'.class_basename($class).'Prolicy';
         });
     }
 }

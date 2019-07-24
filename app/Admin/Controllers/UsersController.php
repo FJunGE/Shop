@@ -29,21 +29,6 @@ class UsersController extends Controller
     }
 
     /**
-     * Show interface.
-     *
-     * @param mixed $id
-     * @param Content $content
-     * @return Content
-     */
-    public function show($id, Content $content)
-    {
-        return $content
-            ->header('Detail')
-            ->description('description')
-            ->body($this->detail($id));
-    }
-
-    /**
      * Edit interface.
      *
      * @param mixed $id
@@ -59,20 +44,6 @@ class UsersController extends Controller
     }
 
     /**
-     * Create interface.
-     *
-     * @param Content $content
-     * @return Content
-     */
-    public function create(Content $content)
-    {
-        return $content
-            ->header('Create')
-            ->description('description')
-            ->body($this->form());
-    }
-
-    /**
      * Make a grid builder.
      *
      * @return Grid
@@ -81,38 +52,29 @@ class UsersController extends Controller
     {
         $grid = new Grid(new User);
 
-        $grid->id('Id');
-        $grid->name('Name');
-        $grid->email('Email');
-        $grid->email_verified_at('Email verified at');
-        $grid->password('Password');
-        $grid->remember_token('Remember token');
-        $grid->created_at('Created at');
-        $grid->updated_at('Updated at');
+        $grid->id('ID');
+        $grid->name('用户名');
+        $grid->email('邮箱');
+        $grid->email_verified_at('邮箱验证')->display(function ($value){
+            return $value ? '是' : '否';
+        });
+        $grid->created_at('注册时间');
+        $grid->updated_at('最后更新时间');
 
+        // 关闭单条数据后面所展示的显示、删除、编辑按钮
+        $grid->actions(function ($actions){
+            $actions->disableView();
+            $actions->disableDelete();
+            $actions->disableEdit();
+        });
+        // 不在显示创建按钮
+        $grid->disableCreateButton();
+        $grid->tools(function ($tools){
+            $tools->batch(function ($batch){
+                $batch->disableDelete();
+            });
+        });
         return $grid;
-    }
-
-    /**
-     * Make a show builder.
-     *
-     * @param mixed $id
-     * @return Show
-     */
-    protected function detail($id)
-    {
-        $show = new Show(User::findOrFail($id));
-
-        $show->id('Id');
-        $show->name('Name');
-        $show->email('Email');
-        $show->email_verified_at('Email verified at');
-        $show->password('Password');
-        $show->remember_token('Remember token');
-        $show->created_at('Created at');
-        $show->updated_at('Updated at');
-
-        return $show;
     }
 
     /**
