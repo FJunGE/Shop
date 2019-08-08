@@ -5,6 +5,28 @@
         <div class="col-lg-10 offset-lg-2">
             <div class="card">
                 <div class="card-body">
+                    {{-- 筛选开始 --}}
+                    <form action="{{ route('products.index') }}" class="search-from">
+                        <div class="form-row">
+                            <div class="col-md-9">
+                                <div class="form-row">
+                                    <div class="col-auto"><input type="text" class="form-control form-control-sm" name="search" placeholder="搜索" value="{{ $filters['search'] }}"></div>
+                                    <div class="col-auto"><button class="btn btn-primary btn-sm">搜索</button></div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <select name="order" class="form-control form-control-sm float-right">
+                                    <option value="">排序方式</option>
+                                    <option value="price_desc">价格从高到低</option>
+                                    <option value="price_asc">价格从低到高</option>
+                                    <option value="sold_count_desc">销量最高</option>
+                                    <option value="sold_count_asc">销量最低</option>
+                                    <option value="rating_desc">评论最多</option>
+                                    <option value="rating_asc">评论最低</option>
+                                </select>
+                            </div>
+                        </div>
+                    </form>
                     <div class="row products-list">
                         @foreach($products as $product)
                             <div class="col-3 product-item">
