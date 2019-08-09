@@ -10,7 +10,7 @@
                         <div class="form-row">
                             <div class="col-md-9">
                                 <div class="form-row">
-                                    <div class="col-auto"><input type="text" class="form-control form-control-sm" name="search" placeholder="搜索" value="{{ $filters['search'] }}"></div>
+                                    <div class="col-auto"><input type="text" class="form-control form-control-sm" name="search" placeholder="搜索"></div>
                                     <div class="col-auto"><button class="btn btn-primary btn-sm">搜索</button></div>
                                 </div>
                             </div>
@@ -44,9 +44,21 @@
                             </div>
                         @endforeach
                     </div>
-                    <div class="float-right">{{ $products->render() }}</div>
+                    <div class="float-right">{{ $products->appends($filters)->render() }}</div>
                 </div>
             </div>
         </div>
     </div>
+@endsection
+@section('scriptsAfterJs')
+    <script>
+        var filters = {!! json_encode($filters) !!};
+        $(document).ready(function () {
+            $('.search-from input[name=search]').val(filters.search);
+            $('.search-from select[name=order]').val(filters.order);
+            $('.search-from select[name=order]').on('change',function () {
+                $('.search-from').submit();
+            });
+        })
+    </script>
 @endsection
