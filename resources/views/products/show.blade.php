@@ -27,7 +27,7 @@
                                 <label>选择</label>
                                 <div class="btn-group btn-group-toggle" data-toggle="buttons">
                                     @foreach($product->skus as $sku)
-                                        <label class="btn sku-btn" title="{{ $sku->description }}" data-placement="bottom" data-toggle="tooltip" data-price="{{ $sku->price }}" data-stock="{{ $sku->stock }}">
+                                        <label class="btn sku-btn" title="{{ $sku->product_code }}" data-placement="bottom" data-toggle="tooltip" data-price="{{ $sku->price }}" data-stock="{{ $sku->stock }}">
                                             <input type="radio" name="skus" autocomplete="off" value="{{ $sku->id }}"> {{ $sku->product_code }}
                                         </label>
                                     @endforeach
@@ -62,11 +62,11 @@
         </div>
     </div>
 @endsection
-@section('scriptsAfter')
+@section('scriptsAfterJs')
     <script>
         $(document).ready(function () {
             $('[data-toggle="tooltip"]').tooltip({trigger: 'hover'});
-            $('.sku-btn').click(function (){
+            $('.sku-btn').click(function () {
                 $('.product-info .price span').text($(this).data('price'));
                 $('.product-info .stock').text('库存：'+ $(this).data('stock') + '件');
             });
