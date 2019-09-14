@@ -42,6 +42,41 @@ class ProductsController extends Controller
         ]);
     }
 
+
+    /**
+     * 收藏产品
+     * @param Request $request
+     * @param Product $product
+     * @return array
+     */
+    public function favor(Request $request, Product $product)
+    {
+        $user = $request->user();
+        // 判断是否已经加入了收藏列表
+        if ($user->favoriteProducts()->find($product->id))
+        {
+            // 是的话 返回空
+            return [];
+        }
+        // 添加相应的关联关系
+        $user->favoriteProducts()->attach($product);
+
+        return [];
+    }
+
+    /**
+     * 取消收藏产品
+     * @param Request $request
+     * @param Product $product
+     * @return array
+     */
+    public function disfavor(Request $request, Product $product)
+    {
+        $user = $request->user();
+        $user->favoriteProduct()->detach($product);
+        return [];
+    }
+
     public function show(Product $product, Request $request)
     {
         if (!$product->on_sale) {
