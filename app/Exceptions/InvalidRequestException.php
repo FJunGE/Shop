@@ -12,8 +12,12 @@ class InvalidRequestException extends Exception
         parent::__construct($message, $code);
     }
 
-    public function render()
+    public function render(Request $request)
     {
+        if ($request->expectsJson()) {
+            // json() 方法第二个参数就是 Http 返回码
+            return response()->json(['msg' => $this->message], $this->code);
+        }
 
         return view('pages.error', ['msg' => $this->message]);
     }
