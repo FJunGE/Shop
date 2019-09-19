@@ -83,7 +83,7 @@
                 axios.post('{{ route('products.favor', [ 'product' => $product->id ]) }}')
                     .then(function (){
                         // 请求成功返回响应
-                        swal('收藏成功', '', 'success');
+                        swal('收藏成功', '', 'success').then;
                     }, function (error) {
                         if (error.response && error.response.status === 401){
                             // 加入状态码是401说明session失效
