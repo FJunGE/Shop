@@ -15,7 +15,7 @@ class HomeController extends Controller
         return $content
             ->header('Junge Shop')
             ->description('中国第一大杂货铺')
-            ->row(view('dashboard.title'))
+            ->row(Dashboard::title())
             ->row(function (Row $row) {
 
                 $row->column(4, function (Column $column) {

@@ -73,7 +73,7 @@ class ProductsController extends Controller
     public function disfavor(Request $request, Product $product)
     {
         $user = $request->user();
-        $user->favoriteProduct()->detach($product);
+        $user->favoriteProducts()->detach($product);
         return [];
     }
 
@@ -83,6 +83,14 @@ class ProductsController extends Controller
             throw new InvalidRequestException('商品未上架');
         }
 
-        return view('products.show', compact('product'));
+        $favored = false;
+        // 用户未登录是返回null，以登陆则返回用户信息
+        if ($user = $request->user()){
+            // 当用户从已收藏的商品中能找到这个产品 则表示已经收藏了
+            // boolval直接返回true
+            $favored = boolval($user->favoriteProducts()->find($product->id));
+        }
+
+        return view('products.show', ['product' => $product, 'favored' => $favored]);
     }
 }

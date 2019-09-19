@@ -29,6 +29,6 @@ Route::group(['middleware'=>['auth','verified']], function () {
     Route::put('user_addresses/{user_address}', 'UserAddressesController@update')->name('user_addresses.update');
     Route::delete('user_addresses/{user_address}', 'UserAddressesController@destroy')->name('user_addresses.destroy');
 
-    Route::get('/products/{product}/favor', 'ProductController@favor')->name('products.favor');
-    Route::get('/products/{product}/disfavor', 'ProductController@disfavor')->name('products.disfavor');
+    Route::post('/products/{product}/favor', 'ProductsController@favor')->name('products.favor');
+    Route::delete('/products/{product}/disfavor', 'ProductsController@disfavor')->name('products.disfavor');
 });
