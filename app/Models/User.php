@@ -52,4 +52,13 @@ class User extends Authenticatable implements MustVerifyEmail
             ->withTimestamps()
             ->orderBy('created_at', 'desc');
     }
+
+    /**
+     * 购物车一对多
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function cartItems()
+    {
+        return $this->hasMany(CartItem::class);
+    }
 }
