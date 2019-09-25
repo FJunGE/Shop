@@ -28,9 +28,12 @@ Route::group(['middleware'=>['auth','verified']], function () {
     Route::put('user_addresses/{user_address}', 'UserAddressesController@update')->name('user_addresses.update');
     Route::delete('user_addresses/{user_address}', 'UserAddressesController@destroy')->name('user_addresses.destroy');
 
+    // product 产品
     Route::post('/products/{product}/favor', 'ProductsController@favor')->name('products.favor');
     Route::delete('/products/{product}/disfavor', 'ProductsController@disfavor')->name('products.disfavor');
     Route::get('/products/favorites', 'ProductsController@favorites')->name('products.favorites');
     Route::get('/products/{product}', 'ProductsController@show')->name('products.show');
 
+    // cart 购物车
+    Route::post('cart', 'CartController@add')->name('cart.add');
 });

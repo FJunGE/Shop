@@ -110,7 +110,43 @@
                     });
                 });
             });
-            
+
+            // 点击加入购物车事件
+            $('.btn-add-to-cart').click(function () {
+
+                // 请求购物车接口
+                axios.post('{{ route('cart.add') }}',{
+                    sku_id: $('label.active input[name=skus]').val(),
+                    amount: $('.cart_amount input').val()
+                }).then(function () {
+                    swal('添加购物车成功！', '', 'success').then(function () {
+                        location.reload();
+                    });
+                },function (error) {
+                    if (error.response.status === 401){
+
+                        // 状态401说明用户未登录
+                        swal('请登录，跳转至登录界面中...', '', 'error').then(function () {
+                            location.href('{{ route('login') }}');
+                        });
+                    }else if(error.response.status === 422){
+
+                        // 状态422说明validate表单验证不通过
+                        var html = '<div>';
+                        _.each(error.response.data.errors, function (errors) {
+                            _.each(errors, function(error){
+                               html += error + '<br>';// 循环把错误写入div中并每条错误加上br换行
+                            });
+                        });
+                        html += '</div>';// 最后在把底补上
+                        swal({content:$(html)[0], icon:'error'});
+                    }else{
+
+                        //还有一种情况 系统崩溃
+                        swal('系统崩溃，稍后再试...');
+                    }
+                })
+            });
         });
     </script>
 @endsection
