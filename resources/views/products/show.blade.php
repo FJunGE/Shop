@@ -120,7 +120,7 @@
                     amount: $('.cart_amount input').val()
                 }).then(function () {
                     swal('添加购物车成功！', '', 'success').then(function () {
-                        location.reload();
+                        location.href ='{{ route('cart.index') }}';
                     });
                 },function (error) {
                     if (error.response.status === 401){
