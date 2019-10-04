@@ -30,9 +30,9 @@
                                         </a>
                                     </div>
                                     <div @if(!$item->productSku->product->on_sale) class="not_on_sale" @endif>
-              <span class="product_title">
-                <a target="_blank" href="{{ route('products.show', [$item->productSku->product_id]) }}">{{ $item->productSku->product->title }}</a>
-              </span>
+                                      <span class="product_title">
+                                        <a target="_blank" href="{{ route('products.show', [$item->productSku->product_id]) }}">{{ $item->productSku->product->title }}</a>
+                                      </span>
                                         <span class="sku_title">{{ $item->productSku->title }}</span>
                                         @if(!$item->productSku->product->on_sale)
                                             <span class="warning">该商品已下架</span>
@@ -50,6 +50,33 @@
                         @endforeach
                         </tbody>
                     </table>
+                    {{-- 个人常用收货地址 --}}
+                    <div>
+                        <form class="form-horizontal" role="form" id="order-form">
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-3 text-md-right">选择收货地址</label>
+                                <div class="col-sm-9 col-md-7">
+                                    <select class="form-control" name="address">
+                                        @foreach($addresses as $address)
+                                            <option value="{{ $address->id }}">{{ $address->full_address }} {{ $address->contact_name }} {{ $address->contact_phone }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-3 text-md-right">备注</label>
+                                <div class="col-sm-9 col-md-7">
+                                    <textarea name="remark" class="form-control" rows="3"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="offset-sm-3 col-sm-3">
+                                    <button type="button" class="btn btn-primary btn-create-order">提交订单</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    {{-- 个人常用收货地址--}}
                 </div>
             </div>
         </div>
@@ -99,6 +126,57 @@
                     // 再将顶部的单选框的值赋值给下面的各个单选框
                     $(this).prop('checked', checked);
                 })
+            });
+
+            $('.btn-create-order').click(function () {
+                var req = {
+                    address_id: $('#order-form').find('select[name=address]').val(),
+                    items: [],
+                    remark: $('#order-form').find('textarea[name=remark]').val(),
+                };
+
+                // 获取每一个sku的id之也就是每一个购物车的sku
+                $('table tr[data-id]').each(function () {
+                    // 获取当前选中的checkbox
+                    var $checkbox = $(this).find('input[name=select][type=checkbox]');
+                    if ($checkbox.prop('disabled') || !$checkbox.prop('checked')){
+                        return;
+                    }
+
+                    // 获取当前购物车sku 输入的数量
+                    var $input = $(this).find('input[name=amount]');
+
+                    // 当前用户设置的数量不是0 或者 非数值跳过
+                    if ($input.val() == 0 || isNaN($input.val())){
+                        return;
+                    }
+
+                    // 给数组合并数据
+                    req.items.push({
+                        amount:$input.val(),
+                        sku_id:$(this).data('id'),
+                    });
+                });
+                axios.post('{{ route('orders.store') }}', req)
+                    .then(function (response) {
+                        swal('订单提交成功', '', 'success');
+                    }, function (error) {
+                        if (error.response.status === 422) {
+                            // http 状态码为 422 代表用户输入校验失败
+                            var html = '<div>';
+                            _.each(error.response.data.errors, function (errors) {
+                                _.each(errors, function (error) {
+                                    html += error+'<br>';
+                                })
+                            });
+                            html += '</div>';
+                            swal({content: $(html)[0], icon: 'error'})
+                        } else {
+                            // 其他情况应该是系统挂了
+                            swal('系统错误', '', 'error');
+                        }
+                    });
+
             });
         });
     </script>
