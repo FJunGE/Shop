@@ -7,11 +7,31 @@ use App\Http\Requests\OrderRequest;
 use App\Models\UserAddress;
 use App\Models\Order;
 use App\Models\ProductSku;
+use App\Jobs\CloserOrder;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
 
 class OrdersController extends Controller
 {
+    public function index(Request $request)
+    {
+        $orders =  Order::query()
+            ->with(['items.product','items.productSku'])
+            ->where('user_id', $request->user()->id)
+            ->orderBy('created_at', 'desc')
+            ->paginate();
+
+        return view('orders.index', ['orders'=>$orders]);
+    }
+
+    public function show(Request $request, Order $order)
+    {
+        $this->authorize('own', $order);
+        return view('orders.show', ['order' => $order->load(['items.productSku', 'items.product'])]);
+    }
+
+
     public function store(OrderRequest $request){
         // 获取当前登录的用户
         $user = $request->user();
@@ -72,6 +92,9 @@ class OrdersController extends Controller
             // 移除购物车数据
             $skuIds = collect($items)->pluck('sku_id'); // collect提前items数组里面的sku_id值作为一个数组
             $user->cartItems()->whereIn('sku_id', $skuIds)->delete();
+
+            // 将订单逻辑操作事务写入脚本中自动运行
+            $this->dispatch(new CloserOrder($order, config('app.order_ttl')));
             return $order;
         });
 

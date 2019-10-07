@@ -56,6 +56,8 @@ return [
 
     'asset_url' => env('ASSET_URL', null),
 
+    // 订单失效时长 秒单位
+    'order_ttl' => 30,
     /*
     |--------------------------------------------------------------------------
     | Application Timezone
