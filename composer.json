@@ -15,7 +15,8 @@
         "laravel/passport": "^7.3",
         "laravel/tinker": "^1.0",
         "paypal/rest-api-sdk-php": "^1.14",
-        "swooletw/laravel-swoole": "^2.6"
+        "swooletw/laravel-swoole": "^2.6",
+        "yansongda/pay": "^2.8"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.6",
