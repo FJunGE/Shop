@@ -6,18 +6,18 @@ return [
         'ali_public_key'    => '',
         'private_key'       => '',
         'log'               => [
-            'file' => storage_path('logs/alipay.log');
+            'file' => storage_path('logs/alipay.log'),
         ],
     ],
 
-    'wechat_pay' => [
+    'wechat' => [
         'app_id'    =>  '',
         'mch_id'    =>  '',
         'key'       =>  '',
         'cert_client'   =>  '',
         'cert_key'  =>  '',
         'log'       =>  [
-            'flie'  =>  storage_path('logs/wechat_pay.log');
+            'flie'  =>  storage_path('logs/wechat_pay.log'),
         ]
-    ]
+    ],
 ];
