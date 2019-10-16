@@ -44,3 +44,10 @@ Route::group(['middleware'=>['auth','verified']], function () {
     Route::get('order', 'OrdersController@index')->name('orders.index');
     Route::get('order/{order}', 'OrdersController@show')->name('orders.show');
 });
+Route::get('alipay', function (){
+    return app('alipay')->web([
+        'out_trade_no' => time(),
+        'total_amount' => '10',
+        'subject'   => '阳江阿姨牛杂 - 测试'
+    ]);
+});
