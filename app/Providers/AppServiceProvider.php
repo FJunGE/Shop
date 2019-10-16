@@ -26,6 +26,10 @@ class AppServiceProvider extends ServiceProvider
             if (app()->environment() !== 'production'){
                 // 当前为开发环境
                 $config['mode'] = 'dev';
+                // 回调地址中的地址必须得带有http开头的完整路由
+                $config['return_url'] = route('payment.alipay.return'); // 前端支付回调
+                // $config['notify_url'] = route('payment.alipay.notify'); // 服务端支付回调
+                $config['notify_url'] = route('http://requestbin.net/r/19uvkf61'); // 服务端支付回调test
                 $config['log']['level'] = Logger::DEBUG;
             }else{
                 $config['log']['level'] = Logger::WARNING;

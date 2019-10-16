@@ -6,7 +6,7 @@ use App\Models\User;
 use App\Models\UserAddress;
 use App\Models\ProductSku;
 use App\Exceptions\InvalidRequestException;
-use App\Jobs\CloseOrder;
+use App\Jobs\CloserOrder;
 use Carbon\Carbon;
 
 class OrderService{

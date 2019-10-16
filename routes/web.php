@@ -43,11 +43,11 @@ Route::group(['middleware'=>['auth','verified']], function () {
     Route::post('order', 'OrdersController@store')->name('orders.store');
     Route::get('order', 'OrdersController@index')->name('orders.index');
     Route::get('order/{order}', 'OrdersController@show')->name('orders.show');
+
+    // payment 支付
+    Route::get('payment/{order}/alipay', 'PaymentController@payByAlipay')->name('payment.alipay');
+    // alipay 前端支付回调
+    Route::get('payment/alipay/return', 'PaymentController@alipayReturn')->name('payment.alipay.return');
 });
-Route::get('alipay', function (){
-    return app('alipay')->web([
-        'out_trade_no' => time(),
-        'total_amount' => '10',
-        'subject'   => '阳江阿姨牛杂 - 测试'
-    ]);
-});
+// alipay 服务端支付回调
+Route::post('payment/alipay/notify', 'PaymentController@alipayNotify')->name('payment.alipay.notify');
