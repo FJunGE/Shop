@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use App\Exceptions\InvalidRequestException;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Monolog\Logger;
 
@@ -37,16 +38,46 @@ class PaymentController extends Controller
     /**
      * 前端支付回调。用户通过浏览器返回参数传送至服务器
      */
-    public function alipayReturn(){
-        $data = app('alipay')->verify(); // 校验前端返回值是否符合要求。不确定是否有被用户恶意篡改
-        dd($data);
+    public function alipayReturn()
+    {
+        try{
+            app('alipay')->verify(); // 校验前端返回值是否符合要求。不确定是否有被用户恶意篡改
+        } catch (\Exception $e) {
+            return view('pages.error', ['msg'=>'数据不正确']);
+        }
+        return view('pages.success',['msg'=>'付款成功']);
     }
 
     /**
      * 后端支付回调。支付成功后ali服务器会用订单相关数据请求项目的接口，不用依赖用户访问浏览器
      */
     public function alipayNotify(){
-        $data = app('alipay')->verify();
+        $data = app('alipay')->verify(); // 校验后台返回的是否符合要求，如果符合
         \Log::debug('Alipay notify', $data->all());
+        if (!in_array($data->trade_status, ['TRADE_SUCCESS', 'TRADE_FINISHED'])) {
+            // 确认回调,确认回调的意思是指给支付宝确认已经收到回调，避免不必要的重复回调
+            return app('alipay')->success();
+        }
+
+        // 确保订单编号能在数据库中搜索得出
+        $order = Order::query()->where('no', $data->out_trade_no)->first();
+        if (!$order) {
+            return 'fail';
+        }
+
+        // 是否已经支付
+        if ($order->paid_at) {
+            // 确认回调
+            return app('alipay')->success();
+        }
+
+        $order->update([
+            'paid_at'   =>  Carbon::now(),// 更新支付时间
+            'payment_method'    =>  'alipay',// 更新支付方式
+            'payment_no'    =>  $data->trade_no,// 支付宝单号
+        ]);
+
+        // 确认回调
+        return app('alipay')->success();
     }
 }
