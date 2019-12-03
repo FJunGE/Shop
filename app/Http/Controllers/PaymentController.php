@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\OrderPaid;
 use App\Models\Order;
 use App\Exceptions\InvalidRequestException;
 use Carbon\Carbon;
@@ -72,12 +73,24 @@ class PaymentController extends Controller
         }
 
         $order->update([
-            'paid_at'   =>  Carbon::now(),// 更新支付时间
+            'paid_at'   =>  Carbon::now(),// 更新 支付时间
             'payment_method'    =>  'alipay',// 更新支付方式
             'payment_no'    =>  $data->trade_no,// 支付宝单号
         ]);
 
+        // 在每一个支付回调接口里面 均调用支付成功事件
+        $this->afterPaid($order);
+
         // 确认回调
         return app('alipay')->success();
     }
+
+    /**
+     * 创建一个支付成功的事件
+     * @param Order $order
+     */
+    /*protected function afterPaid(Order $order)
+    {
+        event(new OrderPaid($order));
+    }*/
 }
